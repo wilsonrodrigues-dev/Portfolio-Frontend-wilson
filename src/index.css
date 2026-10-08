@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Syne:wght@600;700&display=swap');
+
+@import "tailwindcss";
+
+/* Design tokens — source of truth: DESIGN.md
+   These MUST live in @theme (not plain :root): only then does Tailwind v4
+   generate the semantic utilities the components use (bg-bg-color,
+   text-text-muted, border-border-color, bg-accent-primary, font-display, ...). */
+@theme {
+  /* Base palette — DESIGN.md §2 */
+  --color-bg-color: #0F0F11;
+  --color-bg-color-light: #141416;
+  --color-bg-color-lighter: #1A1A1E;
+
+  /* Text hierarchy — DESIGN.md §2 Text */
+  --color-text-primary: #E8E4D9;
+  --color-text-secondary: rgba(232, 228, 217, 0.6);
+  /* DESIGN.md tertiary is 0.4 (placeholders only); components use "muted" for
+     real text, so 0.55 keeps WCAG AA (~5:1) on the #0F0F11 background */
+  --color-text-muted: rgba(232, 228, 217, 0.55);
+
+  /* Borders + glass surface — DESIGN.md §2 Borders */
+  --color-border-color: rgba(232, 228, 217, 0.08);
+  --color-glass-bg: rgba(232, 228, 217, 0.04);
+
+  /* Accents — DESIGN.md §2: steel blue = interactive/link (focus rings, §8
+     form spec); warm brass = secondary accent (gradients, marks, glows) */
+  --color-accent-primary: #4A90D9;
+  --color-accent-secondary: #C8B89A;
+
+  /* Typography — DESIGN.md §3 */
+  --font-display: "Syne", sans-serif;
+  --font-sans: "Geist", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  /* Border radius — DESIGN.md §5 */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+}
+
+/* Vars used only by the hand-written CSS below (no utility references them).
+   Kept unlayered so they are always emitted, regardless of utility usage. */
+:root {
+  --radius-full: 9999px;
+
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base element styles MUST be in @layer base: unlayered rules would beat
+   Tailwind utilities (e.g. button{background:none} would kill
+   bg-text-primary, a{color:inherit} would kill text-text-secondary). */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bg-color);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Background Effects */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(74, 144, 217, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(200, 184, 154, 0.05) 0%, transparent 30%);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  ul, ol {
+    list-style: none;
+  }
+
+  button {
+    border: none;
+    background: none;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg-color);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-bg-color-lighter);
+    border-radius: var(--radius-full);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
+  }
+}
+
+/* Component classes sit in @layer components so per-element utility overrides
+   written next to them (rounded-none, border-x-0, border-white/20, ...) win. */
+@layer components {
+  .text-gradient {
+    background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-accent {
+    background: linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glass-panel {
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--color-border-color);
+    border-radius: var(--radius-lg);
+  }
+}
