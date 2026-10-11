@@ -102,7 +102,7 @@ export default function HomePage() {
     : DEFAULT_HERO_PARAGRAPH;
   const heroYears =
     aboutData?.yearsOfExperience != null ? `${aboutData.yearsOfExperience}+` : '5+';
-  const heroAvatar = resolveMediaUrl(aboutData?.avatar) ?? '/images/portrait.png';
+  const heroAvatar = resolveMediaUrl(aboutData?.avatar) ?? '/images/Wilson.jpg';
   const heroAvatarAlt = aboutData?.name ?? 'Wilson Rodrigues';
 
   let availabilityLabel = 'Open for Work';
